@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag Controls</title>
+</head>
+<body>
+
+    <script type="module">
+        import * as THREE from './three.module.js';
+        import { OrbitControls } from './OrbitControls.js';
+        import {TransformControls} from './TransformControls.js'
+        import {DragControls} from './DragControls.js'
+
+        let scene, camera, renderer, orbit, tControl, tControl2, tControl3, dControl
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 30000 );
+        camera.position.set(7.5, 5, 6);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial()
+        
+        const cube = new THREE.Mesh( geometry, material );
+        scene.add( cube );
+        const cube2 = new THREE.Mesh( geometry, material );
+        cube2.position.x = 2
+        scene.add( cube2 );
+        const cube3 = new THREE.Mesh( geometry, material );
+        cube3.position.x = -2
+        scene.add( cube3);
+
+        scene.add(new THREE.GridHelper(10,20))
+
+        orbit = new OrbitControls(camera, renderer.domElement)
+        dControl = new DragControls([cube, cube2, cube3], camera, renderer.domElement)
+
+        dControl.addEventListener('dragstart', ()=>{
+            orbit.enabled = false
+        })
+
+        dControl.addEventListener('dragend', ()=>{
+            orbit.enabled = true
+        })
+
+
+        const loader = new THREE.TextureLoader()
+        loader.load('./cube_texture.jpg', (texture)=>{
+            material.map = texture
+            animate()
+        })
+
+
+        window.addEventListener('resize', dimensions);
+
+        function dimensions(){
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);  
+            renderer.render(scene, camera);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate)
+            //cube.rotation.x += 0.01
+            //cube.rotation.y += 0.01
+            renderer.render(scene, camera)
+        }
+    </script>
+    
+</body>
+</html>

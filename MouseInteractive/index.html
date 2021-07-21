@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Interactive</title>
+</head>
+<body>
+
+    <script type="module">
+        import * as THREE from './three.module.js';
+        import { OrbitControls } from './OrbitControls.js';
+        import {TransformControls} from './TransformControls.js';
+
+    
+        let scene, camera, renderer, orbit, tControl, tControl2, tControl3
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 30000 );
+        camera.position.set(7.5, 5, 6);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial()
+        
+        const cube = new THREE.Mesh( geometry, material );
+        scene.add( cube );
+        const cube2 = new THREE.Mesh( geometry, material );
+        cube2.position.x = 2
+        scene.add( cube2 );
+        const cube3 = new THREE.Mesh( geometry, material );
+        cube3.position.x = -2
+        scene.add( cube3);
+
+        scene.add(new THREE.GridHelper(10,20))
+////add mouse interactions
+
+        orbit = new OrbitControls(camera, renderer.domElement)
+        tControl = new TransformControls(camera, renderer.domElement)
+        tControl2 = new TransformControls(camera, renderer.domElement)
+        tControl3 = new TransformControls(camera, renderer.domElement)
+
+        tControl.addEventListener('dragging-changed', (e)=>{
+            orbit.enabled = !e.value
+        })
+        tControl2.addEventListener('dragging-changed', (e)=>{
+            orbit.enabled = !e.value
+        })
+        tControl3.addEventListener('dragging-changed', (e)=>{
+            orbit.enabled = !e.value
+        })
+
+        tControl.attach(cube)
+        scene.add(tControl)
+        tControl2.attach(cube2)
+        scene.add(tControl2)
+        tControl3.attach(cube3)
+        scene.add(tControl3)
+
+        tControl.setMode('translate')
+        tControl2.setMode('rotate')
+        tControl3.setMode('scale')
+
+        const loader = new THREE.TextureLoader()
+        loader.load('./cube_texture.jpg', (texture)=>{
+            material.map = texture
+            animate()
+        })
+
+        window.addEventListener('resize', dimensions);
+
+        function dimensions(){
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);  
+            renderer.render(scene, camera);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate)
+            //cube.rotation.x += 0.01
+            //cube.rotation.y += 0.01
+            renderer.render(scene, camera)
+        }
+    </script>
+    
+</body>
+</html>
+
