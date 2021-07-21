@@ -8,10 +8,10 @@
 <body>
 
     <script type="module">
-        import * as THREE from './three.module.js';
-        import { OrbitControls } from './OrbitControls.js';
-        import {TransformControls} from './TransformControls.js'
-        import {DragControls} from './DragControls.js'
+        import * as THREE from '/js/three.module.js';
+        import { OrbitControls } from '/js/OrbitControls.js';
+        import {TransformControls} from '/js/TransformControls.js'
+        import {DragControls} from '/js/DragControls.js'
 
         let scene, camera, renderer, orbit, tControl, tControl2, tControl3, dControl
 
@@ -51,7 +51,7 @@
 
 
         const loader = new THREE.TextureLoader()
-        loader.load('./cube_texture.jpg', (texture)=>{
+        loader.load('/imgs/cube_texture.jpg', (texture)=>{
             material.map = texture
             animate()
         })
